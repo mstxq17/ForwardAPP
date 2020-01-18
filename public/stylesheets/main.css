@@ -1,0 +1,51 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden
+}
+
+body {
+    background: #009688;
+    /*background: #f2f2f2;*/
+}
+
+body:after {
+    content: '';
+    background-repeat: no-repeat;
+    background-size: cover;
+    -webkit-filter: blur(3px);
+    -moz-filter: blur(3px);
+    -o-filter: blur(3px);
+    -ms-filter: blur(3px);
+    filter: blur(3px);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+}
+
+#tab-class {
+    height: 35px;
+    border-bottom: 1px solid #e2e2e2;
+}
+
+#tab-class > .layui-tab-title {
+    height: 35px !important;
+    color: #acafb1;
+}
+
+.layui-tab-item {
+    width: 100% !important;
+    height: 100% !important;
+}
+/* 这里能处理iframe高度自适应的问题 */
+.clildFrame.layui-tab-content {
+    top: 70px;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+    padding: 0;
+}
