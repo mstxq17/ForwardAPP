@@ -3,6 +3,8 @@
  */
 
 
+const path = require('path');
+
 // 运行环境  development 或 production
 exports.env = 'development';
 
@@ -20,6 +22,8 @@ exports.secret = {
   cookie:     'Cookie secret'
 };
 
+// 应用根目录
+exports.path =  path.dirname(process.cwd());
 
 // Redis服务器配置
 exports.redis = {

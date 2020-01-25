@@ -3,51 +3,24 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
-var config = require('./config');
-var session = require('express-session');
-var RedisStore = require('connect-redis')(session);
-var redis = require('./lib/db');
+
 var indexRouter = require('./routes/index');
-var apiRouter = require('./routes/api');
+var usersRouter = require('./routes/users');
 
 var app = express();
 
-
-// redis 配置
-var resConfig = {
-    "cookie": {
-        "maxAge": 1800000
-    },
-    "sessionStore": {
-        "client": redis,
-        "ttl": config.redis.sessionTtl,
-        "prefix": config.redis.prefix + 'SESS:',
-        "logErrors": true
-    }
-}
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
+app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(cookieParser(config.secret.cookie));
 
-//配置redis 缓存session
-
-app.use(session({
-  name : "sid",
-  secret: config.secret.cookie,
-  cookie: resConfig.cookie,
-  store : new RedisStore(resConfig.sessionStore)
-}));
-
-// 路由设置
 app.use('/', indexRouter);
-app.use('/api', apiRouter);
+app.use('/users', usersRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
