@@ -32,10 +32,11 @@ docker推送镜像过程:
 
 2.`cd ForwardAPP`
 
-这里建议修改`docker-compose.yml`中的nginx的映射端口为`- 80:80`,这样别人访问你的
+这里建议修改`docker-compose.yml`中的nginx的映射端口为`- 80:80`
 
-3.`docker-compose up -d --build`
+3.`docker build -t xq17/forwardapp:v1 .` 先本地建立起这个镜像再继续执行
 
+4.`docker-compose up -d --build`
 
 
 端口配置由`docker-compose.yml`定义
