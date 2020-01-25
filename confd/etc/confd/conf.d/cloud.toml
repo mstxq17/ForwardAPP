@@ -1,0 +1,9 @@
+[template]
+src = "cloud.conf.tmpl"
+dest = "/etc/nginx/conf.d/app0.conf"
+keys = [
+  "/services/test"
+]
+
+#check_cmd = "/usr/sbin/nginx -t -c {{.src}}"
+reload_cmd = "/usr/sbin/nginx -s reload"

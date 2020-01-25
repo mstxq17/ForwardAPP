@@ -1,0 +1,41 @@
+version: '3'
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: Dockernginxfile
+    ports:
+      - 8081:80
+    restart: always
+    volumes:
+      - ./nginx/conf.d:/etc/nginx/conf.d
+      - /tmp/logs:/var/log/nginx
+      - ./confd:/opt/confd/bin
+      - ./confd/etc/confd:/etc/confd
+    command: /start.sh
+    links:
+      - app:app
+    depends_on:
+      - app
+
+  redis-server:
+    image: redis:latest
+    ports:
+      - 6479:6379
+    restart: always
+
+  app:
+    image: xq17/forwardapp:v1
+    container_name: ForwardApp
+    volumes:
+      - ./server:/home/ForwardApp
+    restart: always
+    working_dir: /home/ForwardApp
+    command: yarn start && etcd --listen-client-urls 'http://0.0.0.0:2379' --advertise-client-urls 'http://0.0.0.0:2379'
+    ports:
+      - 9999:3000
+      - 9997:3002
+    depends_on:
+      - redis-server
+    links:
+      - redis-server:rd

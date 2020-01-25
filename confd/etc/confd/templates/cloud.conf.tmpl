@@ -1,0 +1,14 @@
+{{range $dir := lsdir "/services/test"}}
+server {
+    listen 80;
+    charset utf-8;
+
+    server_name {{base $dir}};
+    # test
+    location / {
+        {{$custdir := printf "/services/test/%s/url" $dir}}
+        proxy_pass http://{{getv $custdir}}/;
+    }
+}
+{{end}}
+

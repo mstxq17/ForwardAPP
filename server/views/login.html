@@ -1,0 +1,136 @@
+<!--
+    程序名称: login.html
+    程序功能: 登陆前端界面
+    设计人员: xq17
+    设计时间: 2020-01-16 09:40:08
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <!-- 元信息 -->
+    <meta charset="UTF-8">
+    <meta name="Generator" content="Sublime_Text@">
+    <meta name="Author" content="xq17">
+    <meta name="KeyWords" content="study">
+    <meta name="Description" content="frontend study">
+    <!-- 设置http头部 -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta http-equiv="Access-Control-Allow-Origin" content="*">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="format-detection" content="telephone=no">
+    <!-- 标题 -->
+    <title>登陆应用</title>
+    <!-- link -->
+    <link rel="stylesheet" type="text/css" href="./layui/css/layui.css">
+    <link rel="stylesheet" type="text/css" href="./stylesheets/login.css">
+    <!-- css style -->
+    <style type="text/css">
+    </style>
+    <!-- script -->
+    <script src="./layui/layui.js" charset="utf-8"></script>
+    <script src="./javascript/jquery-3.4.1.min.js" charset="utf-8"></script>
+    <script src="./javascript/jquery.particleground.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div class="layui-container">
+        <div class="admin-login-background">
+            <div class="layui-form login-form">
+                <form class="layui-form" method="post" action="">
+                    <div class="layui-form-item logo-title">
+                        <h1>ForwardApp 登陆</h1>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-icon layui-icon-username" for="username"></label>
+                        <input type="text" name="username" lay-verify="required|account" placeholder="用户名或者邮箱" autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-icon layui-icon-password" for="password"></label>
+                        <input type="password" name="password" lay-verify="required|password" placeholder="密码" autocomplete="off" class="layui-input" value="">
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-icon layui-icon-vercode" for="captcha"></label>
+                        <input type="text" name="captcha" lay-verify="required|captcha" placeholder="图形验证码" autocomplete="off" class="layui-input verification captcha" value="">
+                        <div class="captcha-img">
+                            <img id="captchaPic" src="./verifCode" alt="点击刷新">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <input type="checkbox" name="rememberMe" value="true" lay-skin="primary" title="记住密码">
+                    </div>
+                    <div class="layui-form-item">
+                        <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="login">登陆</button>
+                    </div>
+                    <div class="layui-form-item">
+                        <div>
+                            <button class="layui-btn layui-btn-fluid" onclick="reg();">前往注册</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+    function reg() {
+        window.location = './reg';
+    }
+    // 点击刷新
+    $('#captchaPic').on("click", function() {
+        $('#captchaPic').attr('src', './verifCode?t=' + new Date().getTime()).show();
+    });
+    layui.use(['form'], function() {
+        var form = layui.form,
+            layer = layui.layer;
+
+        // 登录过期的时候，跳出ifram框架
+        if (top.location != self.location) top.location = self.location;
+
+        // 粒子线条背景
+        $(document).ready(function() {
+            $('.layui-container').particleground({
+                dotColor: '#5cbdaa',
+                lineColor: '#5cbdaa'
+            });
+        });
+
+        // 进行登录操作
+        form.on('submit(login)', function(data) {
+            var username = data.field.username;
+            var password = data.field.password;
+            var captcha = data.field.captcha;
+            $.post('./api/login', {
+                'username': username,
+                'password': password,
+                'captcha': captcha,
+            }, function(data, code) {
+                var index = layer.load(2, {time: 0.5*1000});
+                if (data.code == "000") {
+                    //关闭加载层
+                    layer.msg('登录成功', { icon: 1 }, function() {
+                        window.location = '/users';
+                        return true;
+                    });
+                    //跳转至登陆
+                } else if (data.code == "003") {
+                    layer.msg('验证码错误!', { icon: 2 });
+                    layer.close(index);
+                } else if (data.code == "001") {
+                    layer.msg('用户名或者密码错误!', { icon: 2 });
+                    layer.close(index);
+                } else {
+                    layer.msg("未知错误", { icon: 2 });
+                    layer.close(index);
+                }
+                // 登陆失败就刷新验证码
+                $('#captchaPic').attr('src', './verifCode?t=' + new Date().getTime()).show();
+            })
+            return false;
+        });
+
+    });
+    </script>
+
+</html>

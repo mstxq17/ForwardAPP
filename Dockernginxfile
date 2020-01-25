@@ -1,0 +1,11 @@
+FROM nginx:latest
+MAINTAINER xq17
+WORKDIR /opt/confd/bin
+COPY ./confd/confd /opt/confd/bin/confd
+COPY ./confd/confd /usr/local/bin/confd
+COPY ./start.sh /start.sh
+RUN chmod +x /start.sh
+RUN chmod +x /opt/confd/bin/confd
+RUN mkdir -p /etc/confd/conf.d
+RUN mkdir -p /etc/confd/templates
+RUN mkdir -p /etc/nginx/conf.d
