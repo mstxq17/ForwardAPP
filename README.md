@@ -6,7 +6,15 @@
 
 
 
-## 0x1 安装过程
+## 0x1 效果图展示
+
+![image-20200125220306483](README.assets/image-20200125220306483.png)
+
+![image-20200125220327065](README.assets/image-20200125220327065.png)
+
+
+
+## 0x2 安装过程
 
 docker推送镜像过程:
 
@@ -16,5 +24,46 @@ docker推送镜像过程:
 
 
 
+
+
 **正式安装**
 
+1.`git clone https://github.com/mstxq17/ForwardAPP.git`
+
+2.`cd ForwardAPP`
+
+这里建议修改`docker-compose.yml`中的nginx的映射端口为`- 80:80`,这样别人访问你的
+
+3.`docker-compose up -d --build`
+
+
+
+端口配置由`docker-compose.yml`定义
+
+>  ```yml
+>nginx:
+>    ports:
+>      - 8081:80
+>redis-server:
+>    ports:
+>      - 6479:6379
+>app:
+>   ports:
+>     - 9997:3002
+>  ```
+
+
+
+## 0x3 使用指南
+
+搭建完成之后,直接访问:`http://ip:9997/`
+
+添加转发域名的时候: 
+
+首先你要将你的主机域名商的dns解析到运行当前`forwardapp`的不要求备案的服务器ip
+
+然后再`UserIp`中填入你需要域名指向的地址,比如你的腾讯云主机,这样就可以实现绕过备案检测
+
+![image-20200125220348807](README.assets/image-20200125220348807.png)
+
+![image-20200125220419961](README.assets/image-20200125220419961.png)
