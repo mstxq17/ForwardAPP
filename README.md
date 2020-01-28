@@ -4,7 +4,7 @@
 
 &emsp;&emsp;Confd+Etcd+Nginx反向代理,WEB可视化配置,集成内网穿透模块,docker一键化部署。
 
-
+在线测试网址: http://47.96.84.148:9997/
 
 ## 0x1 效果图展示
 
@@ -30,11 +30,28 @@ docker推送镜像过程:
 
 1.`git clone https://github.com/mstxq17/ForwardAPP.git`
 
+访问较慢可以尝试下面链接
+
+ps:`git clone https://gitee.com/xq17Boy/ForwardAPP.git`
+
 2.`cd ForwardAPP`
 
 这里建议修改`docker-compose.yml`中的nginx的映射端口为`- 80:80`
 
 3.`docker build -t xq17/forwardapp:v1 .` 先本地建立起这个镜像再继续执行
+
+下载镜像慢,`ubuntu`下直接执行下列命令即可。
+
+```shell
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json <<-'EOF'
+{
+  "registry-mirrors": ["https://yvbdiqtf.mirror.aliyuncs.com"]
+}
+EOF
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+```
 
 4.`docker-compose up -d --build`
 
